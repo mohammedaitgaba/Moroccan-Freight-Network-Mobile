@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty ,IsStrongPassword} from "class-validator"
+import { IsArray, IsNotEmpty ,IsObject,IsStrongPassword} from "class-validator"
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -9,8 +9,11 @@ export class CreateUserDto {
     NUM:String
     @IsNotEmpty()
     ICE:String
-    @IsArray()
-    Coords:[number,number]
+    @IsNotEmpty()
+    coords:[{
+        lang:number
+        lat:number
+    }]
     @IsStrongPassword()
     Password:string
 }

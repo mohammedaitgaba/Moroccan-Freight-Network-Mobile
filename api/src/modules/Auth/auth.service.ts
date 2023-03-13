@@ -15,7 +15,7 @@ export class AuthService {
     ){}
 
     async SignUp(CreateUserDto:CreateUserDto):Promise<{token:string}> {
-        const {STE,Manager,NUM,Coords,ICE,Password}=CreateUserDto        
+        const {STE,Manager,NUM,coords,ICE,Password}=CreateUserDto        
         const hashedPassword = await bcrypt.hash(Password,10) 
         const UserExist = await this.userModel.findOne({ICE})
         if (UserExist) {
@@ -26,7 +26,7 @@ export class AuthService {
             Manager,
             NUM,
             ICE,
-            Coords,
+            coords,
             Password:hashedPassword
         })
     

@@ -12,7 +12,10 @@ export class User {
     @Prop()
     NUM:String    
     @Prop()
-    Coords:[number,number]
+    coords:[{
+        lang:number
+        lat:number
+    }]
     @Prop()
     Password:String
     @Prop({default:false})
