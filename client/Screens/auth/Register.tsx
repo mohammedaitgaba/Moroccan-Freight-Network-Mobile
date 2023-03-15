@@ -8,12 +8,10 @@ import {
   ScrollView,
   Switch,
   PermissionsAndroid,
-  Alert,
+  ImageBackground,
+  ToastAndroid
 } from 'react-native';
 
-import Toast from 'react-native-toast-message';
-
-import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Map from '../../components/MapModal';
@@ -98,115 +96,119 @@ const RegisterScreen = ({navigation}: any) => {
   ///////////////////////////////////////////////////////////////////////
 
   const handleRegister = async () => {
-    const data = {...formData, coords};
-    console.log(data);
     await axios
       .post('http://192.168.9.25:3000/auth/Register', {...formData, coords})
       .then(res => {
         if (res.data) {
-          Toast.show({
-            type: 'success',
-            text1: 'Registred Successfully',
-          });
+          ToastAndroid.showWithGravity(
+            'Registred Successfully',
+              ToastAndroid.SHORT,
+              ToastAndroid.CENTER
+          );
           navigation.navigate('Home');
         }
       })
       .catch(err =>
-        Alert.alert('Rejected', `error : ${err.message}`, [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {text: 'OK'},
-        ]),
+        ToastAndroid.showWithGravity(
+          `error : ${err.message}`,
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER
+        )
       );
   };
 
   return (
-    <LinearGradient colors={['#3A86FF', '#4A4AE4']} style={styles.container}>
-      <ScrollView>
-        <View style={styles.content}>
-          <Text style={styles.title}>Create an account</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="STE"
-              value={formData.STE || ''}
-              onChangeText={value => handleInputChange('STE', value)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="ICE"
-              value={formData.ICE || ''}
-              onChangeText={value => handleInputChange('ICE', value)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Manager"
-              value={formData.Manager || ''}
-              onChangeText={value => handleInputChange('Manager', value)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="NUM"
-              value={formData.NUM || ''}
-              onChangeText={value => handleInputChange('NUM', value)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              placeholder="Password"
-              value={formData.Password || ''}
-              onChangeText={value => handleInputChange('Password', value)}
-            />
-          </View>
-          <View
-            style={[
-              styles.inputContainer,
-              // eslint-disable-next-line react-native/no-inline-styles
-              isEnabled ? null : {backgroundColor: 'grey'},
-            ]}>
-            <Switch
-              trackColor={{false: '#767577', true: '#81b0ff'}}
-              thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-            />
-            {isEnabled ? (
-              <Text> Selected position</Text>
-            ) : (
-              <Text> Current position</Text>
-            )}
-          </View>
+    <ImageBackground source={require('../../utils/images/background.jpg')} style={styles.background}>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.content}>
+            <Text style={styles.title}>Create an account</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="STE"
+                value={formData.STE || ''}
+                onChangeText={value => handleInputChange('STE', value)}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="ICE"
+                value={formData.ICE || ''}
+                onChangeText={value => handleInputChange('ICE', value)}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Manager"
+                value={formData.Manager || ''}
+                onChangeText={value => handleInputChange('Manager', value)}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="NUM"
+                value={formData.NUM || ''}
+                onChangeText={value => handleInputChange('NUM', value)}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                placeholder="Password"
+                value={formData.Password || ''}
+                onChangeText={value => handleInputChange('Password', value)}
+              />
+            </View>
+            <View
+              style={[
+                styles.inputContainer,
+                // eslint-disable-next-line react-native/no-inline-styles
+                isEnabled ? null : {backgroundColor: 'grey'},
+              ]}>
+              <Switch
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+              {isEnabled ? (
+                <Text> Selected position</Text>
+              ) : (
+                <Text> Current position</Text>
+              )}
+            </View>
 
-          <TouchableOpacity style={styles.button} onPress={handleRegister}>
-            <Text style={styles.buttonText}>Register</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <TouchableOpacity style={styles.button} onPress={() => handleRegister()}>
+              <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
 
-      <Map
-        modalVisible={modalVisible}
-        Close={() => setModalVisible(false)}
-        Coords={coords}
-        updateCoords={updateCoords}
-      />
-    </LinearGradient>
+        <Map
+          modalVisible={modalVisible}
+          Close={() => setModalVisible(false)}
+          Coords={coords}
+          updateCoords={updateCoords}
+        />
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.5)',
   },
   content: {
     flex: 1,
@@ -236,18 +238,22 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingHorizontal: 10,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '70%',
+  },
   button: {
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    height: 50,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#008080',
+    borderRadius: 10,
+    width:'100%',
+    paddingVertical: 15,
   },
   buttonText: {
-    color: '#3A86FF',
-    fontSize: 18,
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
