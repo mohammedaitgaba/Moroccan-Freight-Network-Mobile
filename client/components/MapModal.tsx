@@ -31,8 +31,8 @@ const MyModal = (props: any) => {
     const newMarker = {
       id: '1',
       coordinate: [
-        event.geometry.coordinates[0],
-        event.geometry.coordinates[1],
+        coords.lang,
+        coords.lat,
       ],
     };
     setMarker(newMarker);
